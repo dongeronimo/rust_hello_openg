@@ -10,4 +10,8 @@
 - Build using ```$ cargo build```. It downloaded, compiled and solved the dependencies.
 - To add the sdl library to the code I place ```extern crate sdl2;``` at the top of the
 file.
-- To test if it is at least initializing I use ```let _sdl = sdl2::init().expec("Failed to init sdl");``` at the beginning of main.
+- To test if it is at least initializing I use ```let _sdl = sdl2::init().unwrap();``` at the beginning of main.
+
+
+# bibliography
+- https://nercury.github.io/rust/opengl/tutorial/2018/02/08/opengl-in-rust-from-scratch-01-window.html
