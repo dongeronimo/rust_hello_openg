@@ -1,6 +1,16 @@
 extern crate sdl2;//Imports sdl2
 fn main() {
     //sdl2::init must be invoked before any other sdl2 call.
-    let _sdl = sdl2::init()
+    let sdl = sdl2::init()
         .unwrap();//takes the ok value or panics if it is error value.
+    //initializes the video subsystem
+    let video_subsystem = sdl.video().unwrap();
+    let _window = video_subsystem
+        .window("Game", 800,600)
+        .resizable()
+        .build()
+        .unwrap();
+    loop {
+
+    }
 }
