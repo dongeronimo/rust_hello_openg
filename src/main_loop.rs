@@ -3,6 +3,7 @@ extern crate gl; //imports gl
 use std::ffi::{CString, CStr};
 pub use crate::shaders::Shader;
 pub use crate::shaders::Program;
+pub use crate::scene_object::{SceneObject};
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     //Creates the shader
@@ -18,6 +19,9 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         0.5, -0.5, 0.0,   0.0, 1.0, 0.0,
         0.0, 0.5, 0.0,    0.0, 0.0, 1.0,
     ];
+    //new: my scene object
+    let triangle = SceneObject::create(&vertices);
+    //old things
     //Creates the vertex buffer object
     let mut vbo: gl::types::GLuint = 0;
     unsafe {
