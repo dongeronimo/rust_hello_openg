@@ -13,9 +13,10 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     let shader_program = Program::from_shaders(&[vert_shader, frag_shader]).unwrap();
     //the vertex data
     let vertices: Vec<f32> = vec![
-        -0.5, -0.5, 0.0,
-        0.5, -0.5, 0.0,
-        0.0, 0.5, 0.0
+        //positions       //colors
+        -0.5, -0.5, 0.0,  1.0, 0.0, 0.0,
+        0.5, -0.5, 0.0,   0.0, 1.0, 0.0,
+        0.0, 0.5, 0.0,    0.0, 0.0, 1.0,
     ];
     //Creates the vertex buffer object
     let mut vbo: gl::types::GLuint = 0;
@@ -36,14 +37,25 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         gl::BindVertexArray(vao);
         gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
         //Specify the data layout
+        //1) Positions
         gl::EnableVertexAttribArray(0);
         gl::VertexAttribPointer(
             0, //index of the generic vertex attr ("layout (location=0)")
             3, //number of components per vertex attr
             gl::FLOAT, //data type
             gl::FALSE, //normalized 
-            (3 * std::mem::size_of::<f32>()) as gl::types::GLint,//BYte offset between consecutive attributes
+            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,//BYte offset between consecutive attributes
             std::ptr::null() //offset of the first component
+        );
+        //2) Colors
+        gl::EnableVertexAttribArray(1);
+        gl::VertexAttribPointer(
+            1, //"layout (location = 1)"
+            3, //rgb
+            gl::FLOAT,
+            gl::FALSE,
+            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,//BYte offset between consecutive attributes
+            (3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid //first color tuple is at the fourth element in the array
         );
         //unbind
         gl::BindBuffer(gl::ARRAY_BUFFER, 0);
