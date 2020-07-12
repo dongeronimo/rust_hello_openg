@@ -1,10 +1,22 @@
 extern crate gl; //imports gl
+pub use crate::shaders::{Program};
 
 pub struct SceneObject {
     vbo:gl::types::GLuint,
     vao:gl::types::GLuint,
 }
 impl SceneObject{
+    pub fn render(&self, shader_program:&Program){
+        shader_program.set_used();
+        unsafe {
+            gl::BindVertexArray(self.vao);
+            gl::DrawArrays(
+                gl::TRIANGLES,
+                0,
+                3
+            );
+        };
+    }
     pub fn create(vertices:&Vec<f32>)->SceneObject{
         //creates the Vertex Buffer Object
         let mut vbo: gl::types::GLuint = 0;
@@ -56,8 +68,8 @@ impl SceneObject{
 impl Drop for SceneObject{
     fn drop(&mut self){
         unsafe{
-            gl::DeleteBuffers(1, self.vbo as *const gl::types::GLuint);
-            gl::DeleteVertexArrays(1, self.vao as *const gl::types::GLuint);
+            gl::DeleteBuffers(1, &mut self.vbo);//self.vbo as *const gl::types::GLuint);
+            gl::DeleteVertexArrays(1, &mut self.vao);
         }
     }
 }

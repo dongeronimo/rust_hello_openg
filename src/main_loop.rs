@@ -1,6 +1,6 @@
 extern crate sdl2;//Imports sdl2
 extern crate gl; //imports gl
-use std::ffi::{CString, CStr};
+use std::ffi::{CString};
 pub use crate::shaders::Shader;
 pub use crate::shaders::Program;
 pub use crate::scene_object::{SceneObject};
@@ -21,51 +21,6 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     ];
     //new: my scene object
     let triangle = SceneObject::create(&vertices);
-    //old things
-    //Creates the vertex buffer object
-    let mut vbo: gl::types::GLuint = 0;
-    unsafe {
-        gl::GenBuffers(1, &mut vbo);
-        gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-        gl::BufferData(
-            gl::ARRAY_BUFFER,//Target
-            (vertices.len()*std::mem::size_of::<f32>())as gl::types::GLsizeiptr,//size of the buffer
-            vertices.as_ptr() as *const gl::types::GLvoid,//Pointer to data
-            gl::STATIC_DRAW,
-        );
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-    }
-    let mut vao: gl::types::GLuint = 0;
-    unsafe{
-        gl::GenVertexArrays(1, &mut vao);
-        gl::BindVertexArray(vao);
-        gl::BindBuffer(gl::ARRAY_BUFFER, vbo);
-        //Specify the data layout
-        //1) Positions
-        gl::EnableVertexAttribArray(0);
-        gl::VertexAttribPointer(
-            0, //index of the generic vertex attr ("layout (location=0)")
-            3, //number of components per vertex attr
-            gl::FLOAT, //data type
-            gl::FALSE, //normalized 
-            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,//BYte offset between consecutive attributes
-            std::ptr::null() //offset of the first component
-        );
-        //2) Colors
-        gl::EnableVertexAttribArray(1);
-        gl::VertexAttribPointer(
-            1, //"layout (location = 1)"
-            3, //rgb
-            gl::FLOAT,
-            gl::FALSE,
-            (6 * std::mem::size_of::<f32>()) as gl::types::GLint,//BYte offset between consecutive attributes
-            (3 * std::mem::size_of::<f32>()) as *const gl::types::GLvoid //first color tuple is at the fourth element in the array
-        );
-        //unbind
-        gl::BindBuffer(gl::ARRAY_BUFFER, 0);
-        gl::BindVertexArray(0);
-    }
-
     //the event pump
     let mut event_pump = sdl.event_pump().unwrap();
     //the main loop
@@ -79,15 +34,16 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         set_viewport_size(&window);   
         clear_screen();
         //activates the shader program
-        shader_program.set_used();
-        unsafe {
-            gl::BindVertexArray(vao);
-            gl::DrawArrays(
-                gl::TRIANGLES,
-                0,
-                3
-            )
-        }
+        triangle.render(&shader_program);
+        // shader_program.set_used();
+        // unsafe {
+        //     gl::BindVertexArray(vao);
+        //     gl::DrawArrays(
+        //         gl::TRIANGLES,
+        //         0,
+        //         3
+        //     )
+        // }
         
 
         //Swap the buffers
