@@ -8,13 +8,13 @@ pub struct Shader {
 impl Shader {
     pub fn from_source(source: &CStr, kind: gl::types::GLenum)-> Result<Shader, String>{
         let id = shader_from_source(source, kind)?;
-        Ok(Shader {id});
+        Ok(Shader {id})
     }
     pub fn from_vert_source(source: &CStr) -> Result<Shader, String>{
-        Shader::from_source(source, gl::VERTEX_SHADER);
+        Shader::from_source(source, gl::VERTEX_SHADER)
     }
     pub fn from_frag_source(source: &CStr) -> Result<Shader, String>{
-        Shader::from_source(source, gl::FRAGMENT_SHADER);
+        Shader::from_source(source, gl::FRAGMENT_SHADER)
     }
     pub fn id(&self) -> gl::types::GLuint{
         self.id
@@ -50,7 +50,7 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::type
         let error = create_whitespace_cstring_with_len(len as usize);
         //pega a informaçào de erro no shader.
         unsafe {
-            gl::getShaderInfoLog(
+            gl::GetShaderInfoLog(
                 id,
                 len,
                 std::ptr::null_mut(),
@@ -58,27 +58,27 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::type
             );
         }
         //retorna o erro
-        return err(error.to_string_lossy().into_owned());
+        return Err(error.to_string_lossy().into_owned())
     }
     //Deu certo
     else{
         //retorna o sucesso.
-        Ok(id);
+        Ok(id)
     }
 }
 
 fn create_whitespace_cstring_with_len(len:usize)->CString {
     let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
     buffer.extend([b' '].iter().cycle().take(len));
-    unsafe {CString::from_vec_unchecked(buffer)};
+    unsafe {CString::from_vec_unchecked(buffer)}
 }
 
 pub struct Program {
-    id: gl::types::GLuint;
+    id: gl::types::GLuint,
 }
 
 impl Program {
-    pub fn from_shaders(shaders: &[Shader]]->Result<Program, String> {
+    pub fn from_shaders(shaders: &[Shader])->Result<Program, String> {
         let program_id = unsafe {gl::CreateProgram()};
         //Vincula os shaders ao programa
         for shader in shaders {
@@ -94,25 +94,25 @@ impl Program {
             unsafe {gl::GetProgramiv(program_id, gl::INFO_LOG_LENGTH, &mut len);}
             let error = create_whitespace_cstring_with_len(len as usize);
             unsafe{gl::GetProgramInfoLog(program_id, len, std::ptr::null_mut(), error.as_ptr() as *mut gl::types::GLchar);}
-            return Err(error.to_string_lossy().into_owned());            
+            Err(error.to_string_lossy().into_owned())
         }
         //Lida com o sucesso
         else{
             for shader in shaders {
                 unsafe {gl::DetachShader(program_id, shader.id());}
             }
-            Ok(Program {id: program_id});
+            Ok(Program {id: program_id})
         }
-        pub fn id(&self){
-            self.id;
-        }
-        pub fn set_used(&self){
-            unsafe{gl::UseProgram(self.id);}
-        }
+    }
+    pub fn id(&self){
+        self.id;
+    }
+    pub fn set_used(&self){
+        unsafe{gl::UseProgram(self.id);}
     }
 }
 impl Drop for Program {
     fn drop(&mut self){
-        unsafe{gl::DeleteProgram(self.id());}
+        unsafe{gl::DeleteProgram(self.id);}
     }
 }
