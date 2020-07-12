@@ -1,9 +1,11 @@
 extern crate sdl2;//Imports sdl2
 extern crate gl; //imports gl
 use std::ffi::{CString, CStr};
+pub use crate::shaders::Shader;
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
-
+    let vert_src = CString::new(include_str!("triangle.vert")).unwrap();
+    let vert_shader = Shader::from_vert_source(&vert_src).unwrap();
     //the event pump
     let mut event_pump = sdl.event_pump().unwrap();
     //the main loop
