@@ -9,7 +9,7 @@ pub fn init_sdl()->sdl2::Sdl{
 }
 pub enum OpenGLProfile{
     Gles3_1,
-    Core4_1,
+    Core4_5,
 }
 //Initializes the video subsystem
 pub fn init_video_subsystem(sdl:&sdl2::Sdl, profile:OpenGLProfile)->sdl2::VideoSubsystem{
@@ -18,7 +18,7 @@ pub fn init_video_subsystem(sdl:&sdl2::Sdl, profile:OpenGLProfile)->sdl2::VideoS
     //Seta o contexto do opengl
     match profile {
         OpenGLProfile::Gles3_1 => set_context_as_gles_3_1(&video_subsystem),
-        OpenGLProfile::Core4_1 => set_context_as_gl_core_4_1(&video_subsystem),
+        OpenGLProfile::Core4_5 => set_context_as_gl_core_4_1(&video_subsystem),
     }
     return video_subsystem;
 }
