@@ -1,5 +1,5 @@
 extern crate sdl2;//Imports sdl2
-
+extern crate gl; //imports gl
 //Initializes the sdl2 context
 pub fn init_sdl()->sdl2::Sdl{
     //sdl2::init must be invoked before any other sdl2 call.
@@ -28,3 +28,5 @@ pub fn create_gl_context(window:&sdl2::video::Window)-> sdl2::video::GLContext {
     let gl_context = window.gl_create_context().unwrap();
     return gl_context;
 }
+
+
