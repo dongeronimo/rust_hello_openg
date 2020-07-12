@@ -3,6 +3,7 @@ mod shaders;
 mod sdl_utils;
 mod main_loop;
 mod utils;
+mod shader_utils;
 fn main() {
     let sdl = sdl_utils::init_sdl();
     let video_subsystem = sdl_utils::init_video_subsystem(&sdl, sdl_utils::OpenGLProfile::Core4_5);
