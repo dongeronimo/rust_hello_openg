@@ -24,8 +24,11 @@ pub fn create_window(video_subsystem:&sdl2::VideoSubsystem)->sdl2::video::Window
     return _window;
 }
 
-pub fn create_gl_context(window:&sdl2::video::Window)-> sdl2::video::GLContext {
+pub fn create_gl_context(window:&sdl2::video::Window,
+    video_subsystem:&sdl2::VideoSubsystem)-> sdl2::video::GLContext {
     let gl_context = window.gl_create_context().unwrap();
+    //Load the function pointers. After that they will be available at the namespace gl
+    let _gl = gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void);
     return gl_context;
 }
 

@@ -52,6 +52,9 @@ and imported it in the main:
 ```
 extern crate gl; //imports gl
 ```
-
+2. To create the context and load the functions I created the method create_gl_context in sdl_utils.rs. After it's execution the opengl function pointers will be available at the gl namespace. The context is created after the window is created and is created for that window.
+3. Now the main_loop function receives the sdl ref and the window ref and in the loop it clears the screen and swap the buffers.
+4. The screen is cleared using the functions loaded in 2 and is just like in normal opengl programs - glClearColor and glClear.
+5. The buffer is swapped using ```window.gl_swap_window()``` at the end of the loop. This is necessary to be able to see the changes.
 # bibliography
 - https://nercury.github.io/rust/opengl/tutorial/2018/02/08/opengl-in-rust-from-scratch-01-window.html

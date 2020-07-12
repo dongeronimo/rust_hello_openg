@@ -1,10 +1,8 @@
 extern crate sdl2;//Imports sdl2
 extern crate gl; //imports gl
-pub fn main_loop(sdl:&sdl2::Sdl, 
-    video_subsystem:&sdl2::VideoSubsystem,
-    window:&sdl2::video::Window){
-    //Load the function pointers.
-    let _gl = gl::load_with(|s| video_subsystem.gl_get_proc_address(s) as *const std::os::raw::c_void);
+pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
+
+    
     //the event pump
     let mut event_pump = sdl.event_pump().unwrap();
     //the main loop
@@ -15,12 +13,17 @@ pub fn main_loop(sdl:&sdl2::Sdl,
                 _ => {},
             }
         }
-        //render window content here.
-        unsafe{
-            gl::ClearColor(0.3, 0.3, 0.5, 1.0);
-            gl::Clear(gl::COLOR_BUFFER_BIT);
-        }
+        //clears the screen
+        clear_screen();
         //TODO: more things
+        //Swap the buffers
         window.gl_swap_window();
+    }
+}
+
+fn clear_screen(){
+    unsafe{
+        gl::ClearColor(0.3, 0.3, 0.5, 1.0);
+        gl::Clear(gl::COLOR_BUFFER_BIT);
     }
 }
