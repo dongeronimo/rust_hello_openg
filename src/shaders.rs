@@ -1,6 +1,7 @@
 use gl;
 use std;
 use std::ffi::{CStr, CString};
+pub use crate::utils::create_whitespace_cstring_with_len;
 
 pub struct Shader {
     id: gl::types::GLuint,
@@ -29,18 +30,29 @@ impl Drop for Shader{
 }
 
 fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::types::GLuint, String>{
-    let id = unsafe{gl::CreateShader(kind)};//Cria o shader no opengl
-    unsafe {
-        gl::ShaderSource(id, 1, &source.as_ptr(), std::ptr::null());//Seta a string fonte do shader
-        gl::CompileShader(id);//Compila o shader, algo que pode dar erro.
+    let id = create_shader(kind);
+    match compile_shader(id, &source){
+        Ok(msg)=> {
+            return Ok(id);
+        },
+        Err(msg)=>{
+            return Err(msg);
+        }
     }
-    //Verifica se deu certo
+}
+/*The first step of the shader creation process is to tell opengl that you want a new shader and get the opengl id of this
+newly-minted shader. This id will be used whenever you manipulate the shader.*/
+fn create_shader(kind: gl::types::GLenum)->gl::types::GLuint{
+    unsafe{gl::CreateShader(kind)}
+}
+fn compile_shader(id:gl::types::GLuint, source: &CStr)->Result<String, String>{
     let mut success: gl::types::GLint = 1;
     unsafe {
+        gl::ShaderSource(id, 1, &source.as_ptr(), std::ptr::null());
+        gl::CompileShader(id);
         gl::GetShaderiv(id, gl::COMPILE_STATUS, &mut success);
     }
-    //Deu errado.
-    if success == 0{
+    if success == 0 {
         //Pega o tamanho da string de erro que está no mundo do opengl
         let mut len: gl::types::GLint = 0;
         unsafe {
@@ -60,18 +72,11 @@ fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::type
         //retorna o erro
         return Err(error.to_string_lossy().into_owned())
     }
-    //Deu certo
     else{
-        //retorna o sucesso.
-        Ok(id)
+        Ok(String::from("shader compiled ok"))
     }
 }
 
-fn create_whitespace_cstring_with_len(len:usize)->CString {
-    let mut buffer: Vec<u8> = Vec::with_capacity(len + 1);
-    buffer.extend([b' '].iter().cycle().take(len));
-    unsafe {CString::from_vec_unchecked(buffer)}
-}
 
 pub struct Program {
     id: gl::types::GLuint,
