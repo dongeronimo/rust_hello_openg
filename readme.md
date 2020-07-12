@@ -42,5 +42,16 @@ let mut event_pump = sdl.event_pump().unwrap();
 - In the quit event I break the name outer loop using the label I have given. That ends the main app loop and lets the main function proceed to it`s end. When the sdl variable leaves the scope the sdl system will be destroyed.
 - So I can successfully show a window using sdl and rust.
 
+# OpenGL
+1. Added the dependency to the Cargo.toml:
+```
+[dependencies.gl]
+version = "0.14.0"
+```
+and imported it in the main:
+```
+extern crate gl; //imports gl
+```
+
 # bibliography
 - https://nercury.github.io/rust/opengl/tutorial/2018/02/08/opengl-in-rust-from-scratch-01-window.html

@@ -1,4 +1,5 @@
 extern crate sdl2;//Imports sdl2
+extern crate gl; //imports gl
 mod sdl_utils;
 mod main_loop;
 fn main() {
