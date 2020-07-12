@@ -1,6 +1,6 @@
 use gl;
 use std;
-use std::ffi::{CStr};
+use std::ffi::{CStr, CString};
 pub use crate::shader_utils::{shader_from_source, create_shader,compile_shader, create_program, 
     attach_shaders_to_program};
 
@@ -49,6 +49,18 @@ impl Program {
     }
     pub fn set_used(&self){
         unsafe{gl::UseProgram(self.id);}
+    }
+    pub fn find_uniform(&self, name:String)->Result<gl::types::GLint, String>{
+        let uniform_name = CString::new(name.clone()).unwrap();
+        let uniform_id: gl::types::GLint;
+        unsafe{
+            uniform_id = gl::GetUniformLocation(self.id(), uniform_name.as_ptr());
+        };
+        if uniform_id == -1 {
+            Err(format!("uniform not found {_name}", _name = name))
+        }else{
+            Ok(uniform_id)
+        }
     }
 }
 impl Drop for Program {

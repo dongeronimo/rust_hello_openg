@@ -1,6 +1,6 @@
 extern crate gl; //imports gl
 pub use crate::shaders::{Program};
-
+use std::ffi::{CStr, CString};
 pub struct SceneObject {
     vbo:gl::types::GLuint,
     vao:gl::types::GLuint,
@@ -8,6 +8,15 @@ pub struct SceneObject {
 impl SceneObject{
     pub fn render(&self, shader_program:&Program){
         shader_program.set_used();
+
+        let foobar_id = shader_program.find_uniform(String::from("foobar")).unwrap();
+        
+        let foobar_name = CString::new("foobar").unwrap();
+        let mut my_mat_uniform_id : gl::types::GLint = -1;
+        unsafe{
+            my_mat_uniform_id = gl::GetUniformLocation(shader_program.id(), foobar_name.as_ptr());//"foobar".as_ptr() as *mut gl::types::GLchar);
+        }
+        println!("my_mat_uniform_id = {}", my_mat_uniform_id);
         unsafe {
             gl::BindVertexArray(self.vao);
             gl::DrawArrays(

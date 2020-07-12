@@ -32,7 +32,7 @@ pub fn compile_shader(id:gl::types::GLuint, source: &CStr)->Result<String, Strin
     }
     if success == 0 {
         let (error, len) = allocate_string_buffer_for_opengl_error(id);
-        unsafe {gl::GetShaderInfoLog(id,len,std::ptr::null_mut(),error.as_ptr() as *mut gl::types::GLchar,);}
+        unsafe {gl::GetShaderInfoLog(id, len,std::ptr::null_mut(), error.as_ptr() as *mut gl::types::GLchar,);}
         return Err(error.to_string_lossy().into_owned())
     }
     else{

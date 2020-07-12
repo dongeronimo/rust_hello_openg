@@ -33,19 +33,7 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         }
         set_viewport_size(&window);   
         clear_screen();
-        //activates the shader program
         triangle.render(&shader_program);
-        // shader_program.set_used();
-        // unsafe {
-        //     gl::BindVertexArray(vao);
-        //     gl::DrawArrays(
-        //         gl::TRIANGLES,
-        //         0,
-        //         3
-        //     )
-        // }
-        
-
         //Swap the buffers
         window.gl_swap_window();
     }
