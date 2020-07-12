@@ -1,6 +1,6 @@
 use gl;
 use std;
-use std::ffi::{CStr, CString};
+use std::ffi::{CStr};
 pub use crate::utils::create_whitespace_cstring_with_len;
 
 pub struct Shader {
@@ -32,7 +32,7 @@ impl Drop for Shader{
 fn shader_from_source(source: &CStr, kind: gl::types::GLenum) -> Result<gl::types::GLuint, String>{
     let id = create_shader(kind);
     match compile_shader(id, &source){
-        Ok(msg)=> {
+        Ok(_)=> {
             return Ok(id);
         },
         Err(msg)=>{
@@ -53,14 +53,7 @@ fn compile_shader(id:gl::types::GLuint, source: &CStr)->Result<String, String>{
         gl::GetShaderiv(id, gl::COMPILE_STATUS, &mut success);
     }
     if success == 0 {
-        //Pega o tamanho da string de erro que está no mundo do opengl
-        let mut len: gl::types::GLint = 0;
-        unsafe {
-            gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);
-        }
-        //cria o buffer com a string cheia de whitespace.
-        let error = create_whitespace_cstring_with_len(len as usize);
-        //pega a informaçào de erro no shader.
+        let (error, len) = allocate_string_buffer_for_opengl_error(id);
         unsafe {
             gl::GetShaderInfoLog(
                 id,
@@ -77,7 +70,12 @@ fn compile_shader(id:gl::types::GLuint, source: &CStr)->Result<String, String>{
     }
 }
 
-
+fn allocate_string_buffer_for_opengl_error(id:gl::types::GLuint)-> (std::ffi::CString,gl::types::GLint)  {
+    let mut len: gl::types::GLint = 0;
+    unsafe {gl::GetShaderiv(id, gl::INFO_LOG_LENGTH, &mut len);} 
+    let string_buffer = create_whitespace_cstring_with_len(len as usize);
+    (string_buffer, len)
+}
 pub struct Program {
     id: gl::types::GLuint,
 }
