@@ -3,6 +3,7 @@ extern crate gl; //imports gl
 use std::ffi::{CString, CStr};
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
+
     //the event pump
     let mut event_pump = sdl.event_pump().unwrap();
     //the main loop
@@ -35,18 +36,3 @@ fn set_viewport_size(window:&sdl2::video::Window){
     }
 }
 
-// fn shader_from_source(source: &CStr, 
-//     kind: gl::types::GLuint) -> Result<gl::types::GLuint, String>{
-//     let id = unsafe {gl::CreateShader(kind)};
-//     let mut success: gl::types::GLint = 1;
-//     unsafe {
-//         gl::ShaderSource(id, 1, &source.as_ptr(), std::ptr::null());
-//         gl::CompileShader(id);
-//         gl::GetShaderiv(id, gl::COMPILE_STATUS, &mut success);
-//     }
-//     if success == 0 {
-//         let mut len: gl::types::GLint = 0;
-//         unsafe P gl::GetProgramiv(pro)
-//     }
-//     Ok(id)
-// }

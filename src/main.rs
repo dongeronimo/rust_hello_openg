@@ -1,5 +1,5 @@
 extern crate sdl2;//Imports sdl2
-
+mod shaders;
 mod sdl_utils;
 mod main_loop;
 fn main() {
