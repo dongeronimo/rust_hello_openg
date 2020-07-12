@@ -7,11 +7,30 @@ pub fn init_sdl()->sdl2::Sdl{
         .unwrap();//takes the ok value or panics if it is error value.
     return sdl;
 }
+pub enum OpenGLProfile{
+    Gles3_1,
+    Core4_1,
+}
 //Initializes the video subsystem
-pub fn init_video_subsystem(sdl:&sdl2::Sdl)->sdl2::VideoSubsystem{
+pub fn init_video_subsystem(sdl:&sdl2::Sdl, profile:OpenGLProfile)->sdl2::VideoSubsystem{
     //initializes the video subsystem
-    let video_subsystem = sdl.video().unwrap();   
+    let video_subsystem = sdl.video().unwrap();
+    //Seta o contexto do opengl
+    match profile {
+        OpenGLProfile::Gles3_1 => set_context_as_gles_3_1(&video_subsystem),
+        OpenGLProfile::Core4_1 => set_context_as_gl_core_4_1(&video_subsystem),
+    }
     return video_subsystem;
+}
+fn set_context_as_gles_3_1(video_subsystem:&sdl2::VideoSubsystem){
+    let gl_attr = video_subsystem.gl_attr();
+    gl_attr.set_context_profile(sdl2::video::GLProfile::GLES);
+    gl_attr.set_context_version(3, 1);
+}
+fn set_context_as_gl_core_4_1(video_subsystem:&sdl2::VideoSubsystem){
+    let gl_attr = video_subsystem.gl_attr();
+    gl_attr.set_context_profile(sdl2::video::GLProfile::Core);
+    gl_attr.set_context_version(4, 1);
 }
 //Creates a window with fixed size
 pub fn create_window(video_subsystem:&sdl2::VideoSubsystem)->sdl2::video::Window{
