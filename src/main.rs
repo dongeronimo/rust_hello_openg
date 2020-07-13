@@ -2,6 +2,7 @@
 extern crate sdl2;
 //Imports my opengl library
 extern crate infrastructure_opengl;
+extern crate model_scene;
 mod sdl_utils;
 mod main_loop;
 mod camera;
