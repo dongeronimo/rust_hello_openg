@@ -7,8 +7,6 @@ use std::ffi::{CString};
 pub use crate::scene_object::{SceneObject};
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
-    let t = infrastructure_opengl::transform::Transform::new();
-
     //Creates the shader
     let vert_src = CString::new(include_str!("triangle.vert")).unwrap();
     let vert_shader = infrastructure_opengl::shaders::Shader::from_vert_source(&vert_src).unwrap();
@@ -36,7 +34,7 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         }
         set_viewport_size(&window);   
         clear_screen();
-        triangle.render(&mut shader_program);
+        triangle.render(&mut shader_program, window);
         //Swap the buffers
         window.gl_swap_window();
     }

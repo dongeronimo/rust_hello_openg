@@ -1,18 +1,32 @@
 extern crate gl; //imports gl
 extern crate infrastructure_opengl;
-
+extern crate cgmath;
 pub struct SceneObject {
     vbo:gl::types::GLuint,
     vao:gl::types::GLuint,
 }
 impl SceneObject{
-    pub fn render(&self, shader_program: &mut infrastructure_opengl::shaders::Program){
+    pub fn render(&self, 
+                  shader_program: &mut infrastructure_opengl::shaders::Program,
+                  window: &sdl2::video::Window){
+        //Teste das matrizes
+        let (width, height) = window.size();
         let foo_matrix:[f32; 16] = [1.0, 0.0, 0.0, 0.0,
                                     0.0, 1.0, 0.0, 0.0,
                                     0.0, 0.0, 1.0, 0.0,
                                     0.0, 0.0, 0.0, 1.0];
+        let projection_matrix = cgmath::perspective( 
+                            cgmath::Rad::from(cgmath::Deg(45.0)),   //fov, 
+                            width as f32/height as f32, //aspect
+                            0.01,//near z
+                            100.0); //far z;
+        let camera_translation = cgmath::Vector3::new(0.0, 0.0, -3.0);
+        let view_matrix = cgmath::Matrix4::from_translation(camera_translation);
+        let view_projection_matrix = projection_matrix * view_matrix;
+        infrastructure_opengl::transform::print_matrix(projection_matrix);
+        //------------------
         shader_program.set_used();
-        shader_program.set_mat4_uniform(String::from("foobar"), foo_matrix);     
+        shader_program.set_mat4_uniform(String::from("foobar"), view_projection_matrix); //foo_matrix);     
         infrastructure_opengl::draw_vao(self.vao, 0, 3);
         shader_program.stop_using();
     }

@@ -1,6 +1,7 @@
 use gl;
 use std;
 use std::ffi::{CStr, CString};
+extern crate cgmath;
 pub use crate::shader_utils::{shader_from_source, create_shader,compile_shader, create_program, attach_shaders_to_program};
 //Represents the shader, like the vertex shader or the fragment shader. To use the shader you load it using the from_source,
 //from_vert_source or from_frag_source functions. The shader's opengl id will be in the id field and when dropped the shader
@@ -86,9 +87,16 @@ impl Program {
         }
     }
 
-    pub fn set_mat4_uniform(&self, name:String, mat:[f32; 16]){
+    //pub fn set_mat4_uniform(&self, name:String, mat:[f32; 16]){
+    pub fn set_mat4_uniform(&self, name:String, mat: cgmath::Matrix4<f32>){
+        //let mat:[f32; 16] = mat.into();
+        let mat: [f32; 16] = unsafe {
+            let x:[[f32;4];4] = mat.into();
+            std::mem::transmute(x)
+        };
         let uniform_id = self.find_uniform(name).unwrap();
         unsafe{
+            
             gl::UniformMatrix4fv(
                 uniform_id, //location
                 1, //number of matrices

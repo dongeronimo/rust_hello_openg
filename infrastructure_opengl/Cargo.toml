@@ -7,11 +7,12 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-cgmath = "0.17.0"
+cgmath = "0.17.0" #Computer Graphics math lib
+uuid = { version = "0.8", features = ["serde", "v4"] }
 
 [dependencies.gl]
-version = "0.14.0"
+version = "0.14.0" #Opengl
 
 [dependencies.sdl2]
-version = "0.34.2"
+version = "0.34.2" #SDL2 for opengl context creation
 features = ["bundled", "static-link"]

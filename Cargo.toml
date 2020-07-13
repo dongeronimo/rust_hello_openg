@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 infrastructure_opengl = {path = "./infrastructure_opengl"}
 cgmath = "0.17.0"
+uuid = { version = "0.8", features = ["serde", "v4"] }
 
 [dependencies.gl]
 version = "0.14.0"
