@@ -14,6 +14,9 @@ impl SceneObject{
         let (width, height) = window.size();
         //testando a camera
         let mut camera = Camera::new(width, height);
+        camera.translate(cgmath::Vector3::new(0.0, 0.0, -5.0));
+//        camera.set_direction(cgmath::Vector3::new(0.0, 0.0, 1.0));
+//        camera.set_up(cgmath::Vector3::new(0.0, -1.0, 0.0));
         let projection_matrix = camera.projection_matrix();
         let view_matrix = camera.view_matrix();
         let view_projection_matrix = projection_matrix * view_matrix;
