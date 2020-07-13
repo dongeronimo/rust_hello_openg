@@ -2,11 +2,10 @@
 extern crate sdl2;
 //Imports my opengl library
 extern crate infrastructure_opengl;
-mod shaders;
 mod sdl_utils;
 mod main_loop;
-mod utils;
-mod shader_utils;
+
+
 mod scene_object;
 
 fn main() {

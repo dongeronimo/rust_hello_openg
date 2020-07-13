@@ -1,12 +1,12 @@
 extern crate gl; //imports gl
-pub use crate::shaders::{Program};
-use std::ffi::{CStr, CString};
+extern crate infrastructure_opengl;
+
 pub struct SceneObject {
     vbo:gl::types::GLuint,
     vao:gl::types::GLuint,
 }
 impl SceneObject{
-    pub fn render(&self, shader_program:&Program){
+    pub fn render(&self, shader_program: &infrastructure_opengl::shaders::Program){
         shader_program.set_used();
         let foobar_id = shader_program.find_uniform(String::from("foobar")).unwrap();
         //TODO: passar a matriz
