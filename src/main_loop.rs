@@ -2,8 +2,6 @@ extern crate sdl2;//Imports sdl2
 extern crate gl; //imports gl
 extern crate infrastructure_opengl;
 use std::ffi::{CString};
-//pub use crate::shaders::Shader;
-//pub use crate::shaders::Program;
 pub use crate::scene_object::{SceneObject};
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
