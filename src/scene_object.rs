@@ -7,29 +7,14 @@ pub struct SceneObject {
 }
 impl SceneObject{
     pub fn render(&self, shader_program: &mut infrastructure_opengl::shaders::Program){
-        shader_program.set_used();
-        let foobar_id = shader_program.find_uniform(String::from("foobar")).unwrap();
         //TODO: passar a matriz
         let foo_matrix:[f32; 16] = [1.0, 0.0, 0.0, 0.0,
                                     0.0, 1.0, 0.0, 0.0,
                                     0.0, 0.0, 1.0, 0.0,
                                     0.0, 0.0, 0.0, 1.0];
-        unsafe{
-            gl::UniformMatrix4fv(
-                foobar_id, //location
-                1, //number of matrices
-                false as u8,//transpose?
-                foo_matrix.as_ptr() //the matrix itself
-            )
-        }       
-        unsafe {
-            gl::BindVertexArray(self.vao);
-            gl::DrawArrays(
-                gl::TRIANGLES,
-                0,
-                3
-            );
-        };
+        shader_program.set_used();
+        shader_program.set_mat4_uniform(String::from("foobar"), foo_matrix);     
+        infrastructure_opengl::draw_vao(self.vao, 0, 3);
         shader_program.stop_using();
     }
     pub fn create(vertices:&Vec<f32>)->SceneObject{

@@ -11,3 +11,14 @@ pub fn create_gl_context(window:&sdl2::video::Window,
     return gl_context;
 }
 
+pub fn draw_vao(vertex_array_object:gl::types::GLuint, first_vertex:i32, number_of_vertexes:i32){
+    vao::bind_vertex_array(vertex_array_object);
+    unsafe{
+        gl::DrawArrays(
+            gl::TRIANGLES,
+            first_vertex,
+            number_of_vertexes
+        ); 
+    }
+    vao::unbind_vertex_array();
+}

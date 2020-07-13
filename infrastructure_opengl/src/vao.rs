@@ -42,12 +42,12 @@ pub fn create_vao(vbo: gl::types::GLuint,
     vao
 }
 
-fn bind_vertex_array(id: gl::types::GLuint){
+pub fn bind_vertex_array(id: gl::types::GLuint){
     unsafe {
         gl::BindVertexArray(id);
     }
 }
 
-fn unbind_vertex_array(){
+pub fn unbind_vertex_array(){
     bind_vertex_array(0);
 }

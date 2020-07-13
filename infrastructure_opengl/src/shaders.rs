@@ -85,6 +85,18 @@ impl Program {
             Ok(uniform_id)
         }
     }
+
+    pub fn set_mat4_uniform(&self, name:String, mat:[f32; 16]){
+        let uniform_id = self.find_uniform(name).unwrap();
+        unsafe{
+            gl::UniformMatrix4fv(
+                uniform_id, //location
+                1, //number of matrices
+                false as u8,//transpose?
+                mat.as_ptr() //the matrix itself
+            )
+        }   
+    }
 }
 impl Drop for Program {
     fn drop(&mut self){
