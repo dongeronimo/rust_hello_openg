@@ -7,7 +7,6 @@ pub struct SceneObject {
 }
 impl SceneObject{
     pub fn render(&self, shader_program: &mut infrastructure_opengl::shaders::Program){
-        //TODO: passar a matriz
         let foo_matrix:[f32; 16] = [1.0, 0.0, 0.0, 0.0,
                                     0.0, 1.0, 0.0, 0.0,
                                     0.0, 0.0, 1.0, 0.0,
