@@ -8,15 +8,21 @@ pub struct SceneObject {
 impl SceneObject{
     pub fn render(&self, shader_program:&Program){
         shader_program.set_used();
-
         let foobar_id = shader_program.find_uniform(String::from("foobar")).unwrap();
-        
-        let foobar_name = CString::new("foobar").unwrap();
-        let mut my_mat_uniform_id : gl::types::GLint = -1;
+        //TODO: passar a matriz
+        let foo_matrix:[f32; 16] = [1.0, 0.0, 0.0, 0.0,
+                                    0.0, 1.0, 0.0, 0.0,
+                                    0.0, 0.0, 1.0, 0.0,
+                                    0.0, 0.0, 0.0, 1.0];
         unsafe{
-            my_mat_uniform_id = gl::GetUniformLocation(shader_program.id(), foobar_name.as_ptr());//"foobar".as_ptr() as *mut gl::types::GLchar);
-        }
-        println!("my_mat_uniform_id = {}", my_mat_uniform_id);
+//UniformMatrix4fv(location: types::GLint, count: types::GLsizei, transpose: types::GLboolean, value: *const types::GLfloat) -> () { __gl_imports::mem::transmute::<_, extern "system" fn(types::GLint, types::GLsizei, types::GLboolean, *const types::GLfloat) -> ()>(storage::UniformMatrix4fv.f)(location, count, transpose, value) }
+            gl::UniformMatrix4fv(
+                foobar_id, //location
+                1, //number of matrices
+                false as u8,//transpose?
+                foo_matrix.as_ptr() //the matrix itself
+            )
+        }       
         unsafe {
             gl::BindVertexArray(self.vao);
             gl::DrawArrays(
