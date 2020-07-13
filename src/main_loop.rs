@@ -12,7 +12,7 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     let vert_shader = infrastructure_opengl::shaders::Shader::from_vert_source(&vert_src).unwrap();
     let frag_src = CString::new(include_str!("triangle.frag")).unwrap();
     let frag_shader = infrastructure_opengl::shaders::Shader::from_frag_source(&frag_src).unwrap();
-    let shader_program = infrastructure_opengl::shaders::Program::from_shaders(&[vert_shader, frag_shader]).unwrap();
+    let mut shader_program = infrastructure_opengl::shaders::Program::from_shaders(&[vert_shader, frag_shader]).unwrap();
     //the vertex data
     let vertices: Vec<f32> = vec![
         //positions       //colors
@@ -34,7 +34,7 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         }
         set_viewport_size(&window);   
         clear_screen();
-        triangle.render(&shader_program);
+        triangle.render(&mut shader_program);
         //Swap the buffers
         window.gl_swap_window();
     }

@@ -6,7 +6,7 @@ pub struct SceneObject {
     vao:gl::types::GLuint,
 }
 impl SceneObject{
-    pub fn render(&self, shader_program: &infrastructure_opengl::shaders::Program){
+    pub fn render(&self, shader_program: &mut infrastructure_opengl::shaders::Program){
         shader_program.set_used();
         let foobar_id = shader_program.find_uniform(String::from("foobar")).unwrap();
         //TODO: passar a matriz
@@ -30,6 +30,7 @@ impl SceneObject{
                 3
             );
         };
+        shader_program.stop_using();
     }
     pub fn create(vertices:&Vec<f32>)->SceneObject{
         //creates the Vertex Buffer Object

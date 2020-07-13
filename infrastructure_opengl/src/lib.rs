@@ -1,5 +1,5 @@
 extern crate sdl2;
-pub mod shaders;
+pub mod shaders;//torna a shaders publica pros usuários dessa lib.
 mod shader_utils;
 mod utils;
 pub fn create_gl_context(window:&sdl2::video::Window,
