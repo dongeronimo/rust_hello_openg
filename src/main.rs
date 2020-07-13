@@ -4,6 +4,7 @@ extern crate sdl2;
 extern crate infrastructure_opengl;
 mod sdl_utils;
 mod main_loop;
+mod camera;
 
 
 mod scene_object;

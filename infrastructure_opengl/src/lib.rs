@@ -5,7 +5,7 @@ pub mod shaders;//torna a shaders publica pros usuários dessa lib.
 pub mod vbo;
 pub mod vao;
 pub mod transform;
-pub mod camera;
+
 
 mod shader_utils;
 mod utils;
