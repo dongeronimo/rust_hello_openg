@@ -1,34 +1,15 @@
 extern crate cgmath;
 extern crate uuid;
+pub mod identity;
 pub mod transform;
+pub mod camera;
 use std::collections::HashMap;
 use uuid::Uuid;
+use crate::identity::Identity;
 use crate::transform::Transform;
-//------------------------------------------------------------------------------
+use crate::camera::Camera;
 
-//------------------------------------------------------------------------------
-pub trait Identity {
-    fn id(&self)->String;
-}
-//------------------------------------------------------------------------------
-pub struct Camera{
-    id: String,
-    transform: Transform,
-    //TODO: Coisas especificas de camera
-}
-impl Camera{
-    pub fn new() -> Camera{
-        let id = Uuid::new_v4().to_string();
-        let transform = Transform::new();
-        return Camera{
-            id: id,
-            transform: transform,
-        }
-    }
-}
-impl Identity for Camera{
-    fn id(&self) -> std::string::String { self.id.clone() }
-}
+
 //------------------------------------------------------------------------------
 pub struct Light{
     id:String,
@@ -79,10 +60,10 @@ struct World {
     camera_id: String,
 }
 impl World{
-    pub fn new() -> World{
+    pub fn new(view_width: u32, view_height:u32) -> World{
         let root = Object::new();
         let root_id = root.id();
-        let camera = Camera::new();
+        let camera = Camera::new(view_width, view_height);
         let camera_id = camera.id();
         let mut map: HashMap<String, WorldObject> = HashMap::new();
         
