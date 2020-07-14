@@ -4,7 +4,7 @@ extern crate uuid;
 pub mod shaders;//torna a shaders publica pros usuários dessa lib.
 pub mod vbo;
 pub mod vao;
-pub mod transform;
+
 
 
 mod shader_utils;
