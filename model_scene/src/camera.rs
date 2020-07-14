@@ -1,8 +1,7 @@
 extern crate cgmath;
 use crate::transform::Transform;
 use crate::identity::Identity;
-use uuid::Uuid;
-
+use crate::utils::create_id_and_initial_transform;
 pub struct Camera{
     id: String,
     transform: Transform,
@@ -15,8 +14,7 @@ pub struct Camera{
 }
 impl Camera{
     pub fn new(width:u32, height:u32) -> Camera{
-        let id = Uuid::new_v4().to_string();
-        let transform = Transform::new();
+        let (id, transform) = create_id_and_initial_transform();
         return Camera{
             fov:45.0, 
             width:width,

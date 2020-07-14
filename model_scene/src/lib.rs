@@ -1,53 +1,20 @@
 extern crate cgmath;
 extern crate uuid;
+extern crate infrastructure_opengl;
 pub mod identity;
 pub mod transform;
 pub mod camera;
+pub mod light;
+pub mod object;
+mod utils;
 use std::collections::HashMap;
-use uuid::Uuid;
+
 use crate::identity::Identity;
-use crate::transform::Transform;
 use crate::camera::Camera;
+use crate::light::Light;
+use crate::object::Object;
 
 
-//------------------------------------------------------------------------------
-pub struct Light{
-    id:String,
-    transform: Transform,
-    //TODO: Coisas especificas de luz
-}
-impl Light {
-    pub fn new() -> Light{
-        let id = Uuid::new_v4().to_string();
-        let transform = Transform::new();
-        return Light{
-            id: id,
-            transform: transform,
-        }
-    }
-}
-impl Identity for Light{
-    fn id(&self) -> std::string::String { self.id.clone() }
-}
-//------------------------------------------------------------------------------
-pub struct Object {
-    id:String,
-    transform: Transform,
-    //TODO: Coisas espeficas de Objetos 3d
-}
-impl Object{
-    pub fn new() -> Object{
-        let id = Uuid::new_v4().to_string();
-        let transform = Transform::new();
-        return Object{
-            id: id,
-            transform: transform,
-        }
-    }
-}
-impl Identity for Object{
-    fn id(&self) -> std::string::String { self.id.clone() }
-}
 //------------------------------------------------------------------------------
 pub enum WorldObject {
     Camera(Camera),
@@ -61,7 +28,7 @@ struct World {
 }
 impl World{
     pub fn new(view_width: u32, view_height:u32) -> World{
-        let root = Object::new();
+        let root = Object::new(Vec::new(), true);
         let root_id = root.id();
         let camera = Camera::new(view_width, view_height);
         let camera_id = camera.id();
