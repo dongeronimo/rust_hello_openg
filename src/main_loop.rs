@@ -3,18 +3,23 @@ extern crate gl; //imports gl
 extern crate infrastructure_opengl;
 use std::ffi::{CString};
 pub use crate::scene_object::{SceneObject};
-use model_scene::world::{World, WorldObject};
+use model_scene::world::{World};
 use model_scene::identity::Identity;
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
+    let (window_width, window_height) = window.size();
     //Testing the scene
-    let mut w = World::new();
-    let x = match w.find_by_name(String::from("camera")).unwrap(){
-        WorldObject::Camera(obj)=>obj as &dyn Identity,
-        WorldObject::Light(obj)=>obj as &dyn Identity,
-        WorldObject::Object(obj)=>obj as &dyn Identity,
-    };
-    println!("name = {}", x.get_name());
+    let mut w = World::new(window_width, window_height);
+    //TODO: Reposicionar a câmera
+    let mut cam = w.get_camera().unwrap(); 
+    println!("Got camera? name={} id={}", cam.get_name(), cam.get_id());
+    //TODO: Criar o objeto do triâgulo como filho de root.
+    // let x = match w.find_by_name(String::from("camera")).unwrap(){
+    //     WorldObject::Camera(obj)=>obj as &dyn Identity,
+    //     WorldObject::Light(obj)=>obj as &dyn Identity,
+    //     WorldObject::Object(obj)=>obj as &dyn Identity,
+    // };
+    // println!("name = {}", x.get_name());
     
     // println!("number of objects after creation: {}", w.number_of_objects());
     //Creates the shader

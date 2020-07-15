@@ -39,6 +39,12 @@ impl Identity for Object{
     } 
     fn get_name(&self) -> &std::string::String { &self.name }
 }
+
+impl Drop for Object {
+    fn drop(&mut self) { 
+        println!("Object {} dropped", self.name);
+     }
+}
 // extern crate cgmath;
 // extern crate gl; //imports gl
 // use crate::transform::Transform;
