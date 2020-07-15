@@ -1,20 +1,42 @@
 use crate::identity::Identity;
-
+extern crate cgmath;
+extern crate gl; //imports gl
+use crate::transform::Transform;
+use crate::camera::Camera;
+use std::ffi::{CString};
 pub struct Object {
     name:String,
     id: u32,
     parent_id: u32,
-    children: Vec<u32>
+    children: Vec<u32>,
+
+    transform: Transform,
+    vbo:gl::types::GLuint,
+    vao:gl::types::GLuint,
+    shader_program: infrastructure_opengl::shaders::Program,
 }
 impl Object{
-    pub fn new(name:String,last_id:u32, parent_id:u32)->Object{
+    pub fn new(name:String,last_id:u32, parent_id:u32, vertices:Vec<f32>)->Object{
+        let transform = Transform::new();
+        let vbo = infrastructure_opengl::vbo::create_vbo(&vertices);
+        let vao = infrastructure_opengl::vao::create_vao(vbo, 3,3,0,3);
+        let vert_src = CString::new(include_str!("triangle.vert")).unwrap();
+        let vert_shader = infrastructure_opengl::shaders::Shader::from_vert_source(&vert_src).unwrap();
+        let frag_src = CString::new(include_str!("triangle.frag")).unwrap();
+        let frag_shader = infrastructure_opengl::shaders::Shader::from_frag_source(&frag_src).unwrap();
+        let program = infrastructure_opengl::shaders::Program::from_shaders(&[vert_shader, frag_shader]).unwrap();
         return Object{
             name:name,
             id: last_id+1,
             parent_id: parent_id,
             children: Vec::new(),
+            transform: transform,
+            vbo: vbo, 
+            vao: vao,
+            shader_program: program,            
         }
     }   
+    pub fn is_root(&self)->bool{ self.parent_id == self.id }
 }
 impl Identity for Object{
     fn get_id(&self) -> u32 { 

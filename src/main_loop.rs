@@ -5,23 +5,18 @@ use std::ffi::{CString};
 pub use crate::scene_object::{SceneObject};
 use model_scene::world::{World};
 use model_scene::identity::Identity;
+use model_scene::camera::Camera;
+use cgmath::Vector3;
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     let (window_width, window_height) = window.size();
     //Testing the scene
     let mut w = World::new(window_width, window_height);
-    //TODO: Reposicionar a câmera
-    let mut cam = w.get_camera().unwrap(); 
-    println!("Got camera? name={} id={}", cam.get_name(), cam.get_id());
+    //Reposiciona a camera
+    let mut cam = w.get_camera().unwrap();
+    cam.translate(Vector3::new(0.0, 0.0, -5.0));
     //TODO: Criar o objeto do triâgulo como filho de root.
-    // let x = match w.find_by_name(String::from("camera")).unwrap(){
-    //     WorldObject::Camera(obj)=>obj as &dyn Identity,
-    //     WorldObject::Light(obj)=>obj as &dyn Identity,
-    //     WorldObject::Object(obj)=>obj as &dyn Identity,
-    // };
-    // println!("name = {}", x.get_name());
-    
-    // println!("number of objects after creation: {}", w.number_of_objects());
+
     //Creates the shader
     let vert_src = CString::new(include_str!("triangle.vert")).unwrap();
     let vert_shader = infrastructure_opengl::shaders::Shader::from_vert_source(&vert_src).unwrap();
