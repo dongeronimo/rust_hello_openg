@@ -6,6 +6,7 @@ pub use crate::scene_object::{SceneObject};
 use model_scene::world::{World};
 use model_scene::identity::Identity;
 use model_scene::camera::Camera;
+use model_scene::object::Object;
 use cgmath::Vector3;
 
 pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
@@ -13,25 +14,26 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
     //Testing the scene
     let mut w = World::new(window_width, window_height);
     //Reposiciona a camera
-    let mut cam = w.get_camera().unwrap();
+    let cam = w.get_camera_as_mut().unwrap();
     cam.translate(Vector3::new(0.0, 0.0, -5.0));
-    //TODO: Criar o objeto do triâgulo como filho de root.
-
-    //Creates the shader
-    let vert_src = CString::new(include_str!("triangle.vert")).unwrap();
-    let vert_shader = infrastructure_opengl::shaders::Shader::from_vert_source(&vert_src).unwrap();
-    let frag_src = CString::new(include_str!("triangle.frag")).unwrap();
-    let frag_shader = infrastructure_opengl::shaders::Shader::from_frag_source(&frag_src).unwrap();
-    let mut shader_program = infrastructure_opengl::shaders::Program::from_shaders(&[vert_shader, frag_shader]).unwrap();
-    //the vertex data
-    let vertices: Vec<f32> = vec![
+    //Cria o objeto do triâgulo como filho de root.
+    let vertices: Vec<f32> = vec![//Define os vertices
         //positions       //colors
         -0.5, -0.5, 0.0,  1.0, 0.0, 0.0,
         0.5, -0.5, 0.0,   0.0, 1.0, 0.0,
         0.0, 0.5, 0.0,    0.0, 0.0, 1.0,
     ];
-    //new: my scene object
-    let triangle = SceneObject::create(&vertices);
+    //Cria o objeto
+    let test_triangle = Object::new(String::from("triangle"), //Nome do objeto
+                                        w.generate_id(), //id do objeto
+                                        w.get_root_as_mut().unwrap().get_id(), //id do parent
+                                        vertices);//os vertices
+    let root = w.get_root_as_mut();
+    let root = root.unwrap();
+    w.set_parent_child(root.get_id(), test_triangle.get_id());                                        
+    w.add_object(test_triangle);//adiciona ao world
+    
+
     //the event pump
     let mut event_pump = sdl.event_pump().unwrap();
     //the main loop
@@ -44,7 +46,9 @@ pub fn main_loop(sdl:&sdl2::Sdl, window:&sdl2::video::Window){
         }
         set_viewport_size(&window);   
         clear_screen();
-        triangle.render(&mut shader_program, window);
+        let (vp_width, vp_height) = window.size();
+        w.get_camera_as_mut().unwrap().set_viewport_dimensions(vp_width, vp_height);
+        w.render_world();
         //Swap the buffers
         window.gl_swap_window();
     }
