@@ -51,3 +51,15 @@ pub fn bind_vertex_array(id: gl::types::GLuint){
 pub fn unbind_vertex_array(){
     bind_vertex_array(0);
 }
+
+pub fn draw_vao(vertex_array_object:gl::types::GLuint, first_vertex:i32, number_of_vertexes:i32){
+    bind_vertex_array(vertex_array_object);
+    unsafe{
+        gl::DrawArrays(
+            gl::TRIANGLES,
+            first_vertex,
+            number_of_vertexes
+        ); 
+    }
+    unbind_vertex_array();
+}

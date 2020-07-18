@@ -1,27 +1,33 @@
-extern crate cgmath;
-pub struct Camera {
+use crate::transform::Transform;
+
+pub struct PerspectiveCamera {
+    transform: Transform,
     fov:f32,
     width:u32,
     height:u32,
     z_near:f32,
     z_far:f32,
-    //TODO: One day I will replace these things with the Transform class
-    position: cgmath::Vector3<f32>,
-    direction: cgmath::Vector3<f32>,
-    up: cgmath::Vector3<f32>,
 }
-impl Camera{
-    pub fn new(width:u32, height: u32) -> Camera{
-        Camera{fov:45.0, 
-            width:width,
-            height:height,
+impl PerspectiveCamera{
+    pub fn new(viewport_width:u32, //Viewport width, usually is the window width
+               viewport_height:u32 //Viewport height, usually is the window height.
+            )->PerspectiveCamera{
+        let mut transform = Transform::new();
+
+        return PerspectiveCamera{
+            fov:45.0, 
+            transform: transform,
+            width:viewport_width,
+            height:viewport_height,
             z_near:0.01,
             z_far:100.0,
-            position: cgmath::Vector3::new(0.0, 0.0, 0.0),
-            direction: cgmath::Vector3::new(0.0, 0.0, 1.0),
-            up: cgmath::Vector3::new(0.0, 1.0, 0.0)}
+        }
     }
-    pub fn projection_matrix(&self)->cgmath::Matrix4<f32>{
+    pub fn set_viewport_dimensions(&mut self, w:u32, h:u32){
+        self.width = w;
+        self.height = h;
+    }
+    pub fn projection_matrix(&self) -> cgmath::Matrix4<f32>{
         let projection_matrix = cgmath::perspective( 
             cgmath::Rad::from(cgmath::Deg(self.fov)),   //fov, 
             self.width as f32/self.height as f32, //aspect
@@ -29,28 +35,34 @@ impl Camera{
             self.z_far); //far z;
         return projection_matrix;
     }
-    pub fn view_matrix(&self)->cgmath::Matrix4<f32>{
-        //TODO: look at
+    pub fn view_matrix(&self) -> cgmath::Matrix4<f32>{
         let look_at_mat = cgmath::Matrix4::look_at_dir(
             cgmath::Point3::new(0.0, 0.0, 0.0), 
-            self.direction, 
-            self.up);
-        //TODO: translation
-        let translation_mat = cgmath::Matrix4::from_translation(self.position);
-        //TODO: First look at, then translate
+            self.transform.orientation(), 
+            self.transform.v_up());
+        let translation_mat = cgmath::Matrix4::from_translation(self.transform.translation());
         let result = translation_mat * look_at_mat;
-        // let camera_translation = cgmath::Vector3::new(0.0, 0.0, -30.0);
-        // let view_matrix = cgmath::Matrix4::from_translation(camera_translation);
-        return result;
+        return result;       
+    }    
+    //delegating to Transform.
+    pub fn translate(&mut self, pos: cgmath::Vector3<f32>){
+        self.transform.translate(pos);
     }
-    //TODO: Use the transform class
-    pub fn translate(&mut self, translation: cgmath::Vector3<f32>){
-        self.position = translation;
+    pub fn translation(&self)->cgmath::Vector3<f32>{
+        self.transform.translation()
     }
-    pub fn set_direction(&mut self, direction: cgmath::Vector3<f32>){
-        self.direction = direction; 
+    pub fn reorient(&mut self, orientation: cgmath::Vector3<f32>){
+        self.transform.reorient(orientation);
     }
-    pub fn set_up(&mut self, up: cgmath::Vector3<f32>){
-        self.up = up;
+    pub fn orientation(&self)->cgmath::Vector3<f32>{
+        self.transform.orientation()
+    }
+    pub fn change_up(&mut self, v_up: cgmath::Vector3<f32>){
+        self.transform.change_up(v_up);
+    }
+    pub fn v_up(&self) -> cgmath::Vector3<f32>{
+        self.transform.v_up()
     }
 }
+
+

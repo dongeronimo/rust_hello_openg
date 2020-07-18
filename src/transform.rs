@@ -1,6 +1,6 @@
 extern crate cgmath;
 use std::fmt;
-
+use crate::cgmath::SquareMatrix;
 pub struct Transform {
     position: cgmath::Vector3<f32>,
     //The direction the object is looking at
@@ -35,11 +35,7 @@ impl Transform {
         self.v_up
     }
     pub fn matrix(&self) -> cgmath::Matrix4<f32> {
-        let identity = cgmath::Matrix4::from_cols(
-            cgmath::Vector4::new(1.0, 0.0, 0.0, 0.0), 
-            cgmath::Vector4::new(0.0, 1.0, 0.0, 0.0), 
-            cgmath::Vector4::new(0.0, 0.0, 1.0, 0.0), 
-            cgmath::Vector4::new(0.0, 0.0, 0.0, 1.0));
+        let identity = cgmath::Matrix4::from_diagonal(cgmath::Vector4::new(1.0, 1.0, 1.0, 1.0));
         let look_at_mat = cgmath::Matrix4::look_at_dir(cgmath::Point3::new(0.0, 0.0, 0.0),
             self.orientation,
             self.v_up);    
